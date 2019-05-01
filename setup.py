@@ -28,6 +28,6 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=find_packages(exclude=["test"]),
-    install_requires=["SRTM.py", "numpy", "matplotlib", "scikit-image"],
+    install_requires=["SRTM.py", "numpy", "matplotlib", "scikit-image>=0.14.2"],
     include_package_data=True,
 )
