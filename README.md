@@ -35,7 +35,7 @@ or allow the default processor to help you.
 Plotting with all th defaults should give you a map of my favorite mountains.
 
 ```python
-from ridge_map.ridge_map import RidgeMap
+from ridge_map import RidgeMap
 
 RidgeMap().plot_map()
 ```
