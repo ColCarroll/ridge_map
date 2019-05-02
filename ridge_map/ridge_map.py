@@ -79,7 +79,7 @@ class RidgeMap:
     def longs(self):
         return (self.bbox[0], self.bbox[2])
 
-    def get_elevation_data(self, num_lines=80, elevation_pts=300):
+    def get_elevation_data(self, num_lines=80, elevation_pts=300, viewpoint="south"):
         """Fetch elevation data and return a numpy array.
 
         Parameters
@@ -89,23 +89,26 @@ class RidgeMap:
         elevation_pts : int
             Number of points on each line to request. There's some limit to
             this that srtm enforces, but feel free to go for it!
+        viewpoint : str in ["south", "west", "north", "east"] (default "south")
+            The compass direction from which the map will be visualised.
 
         Returns
         -------
         np.ndarray
         """
-        return self._srtm_data.get_image(
+        if viewpoint in ["east", "west"]:
+            num_lines, elevation_pts = elevation_pts, num_lines
+        values = self._srtm_data.get_image(
             (elevation_pts, num_lines), self.lats, self.longs, 5280, mode="array"
         )
 
+        switch = {"south": 0, "west": 3, "north": 2, "east": 1}
+        rotations = switch[viewpoint]
+        values = np.rot90(m=values, k=rotations)
+        return values
+
     def preprocess(
-        self,
-        *,
-        values=None,
-        water_ntile=10,
-        lake_flatness=3,
-        vertical_ratio=40,
-        viewpoint="south"
+        self, *, values=None, water_ntile=10, lake_flatness=3, vertical_ratio=40
     ):
         """Default preprocessing.
 
@@ -128,8 +131,6 @@ class RidgeMap:
         vertical_ratio : float > 0
             How much to exaggerate hills. Kind of arbitrary. 40 is reasonable,
             but try bigger and smaller values!
-        viewpoint : str in ["south", "west", "north", "east"] (default "south")
-            The compass direction from which the map will be visualised.
 
         Returns
         -------
@@ -150,11 +151,6 @@ class RidgeMap:
         values[nan_vals] = np.nan
         values[np.logical_or(is_water, is_lake)] = np.nan
         values = vertical_ratio * values[-1::-1]  # switch north and south
-
-        switch = {"south": 0, "west": 1, "north": 2, "east": 3}
-        rotations = switch[viewpoint]
-        values = np.rot90(m=values, k=rotations)
-
         return values
 
     def plot_map(
