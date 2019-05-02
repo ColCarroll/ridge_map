@@ -21,7 +21,7 @@ Want to help?
 -------------
 
 - I feel like I am missing something easy or obvious with lake/road/river/ocean detection, but what I've got gets me most of the way there. If you hack on the `RidgeMap.preprocessor` method and find something nice, I would love to hear about it!
-- As far as I can tell, there is no way to change the color of a line in matplotlib dynamically. I would love to color the lines by elevation.
+- ~~As far as I can tell, there is no way to change the color of a line in matplotlib dynamically. I would love to color the lines by elevation.~~ Color by elevation!
 - Did you make a cool map? Open an issue with the code and I will add it to the examples.
 
 Examples
@@ -32,7 +32,7 @@ or allow the default processor to help you.
 
 ### New Hampshire by default
 
-Plotting with all th defaults should give you a map of my favorite mountains.
+Plotting with all the defaults should give you a map of my favorite mountains.
 
 ```python
 from ridge_map import RidgeMap
@@ -98,6 +98,31 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=3, water_ntile=50,
 ```
 
 ![png](examples/san_francisco.png)
+
+### Plot with custom fonts and elevation colors!
+
+You can find a good font [from Google](https://fonts.google.com/), and then get the path to the ttf file [in the github repo](https://github.com/google/fonts/tree/master/ofl).
+
+If you pass a matplotlib colormap, you can specify `kind="elevation"` to color tops of mountains different from bottoms. `ocean`, `gnuplot`, and `bone` look nice.
+
+```python
+from ridge_map import FontManager
+
+font = FontManager('https://github.com/google/fonts/blob/master/ofl/uncialantiqua/UncialAntiqua-Regular.ttf?raw=True')
+rm = RidgeMap((-156.250305,18.890695,-154.714966,20.275080), font=font.prop)
+
+values = rm.get_elevation_data(num_lines=100)
+rm.plot_map(values=rm.preprocess(values=values, lake_flatness=2, water_ntile=10, vertical_ratio=240),
+            label="Hawai'i",
+            label_y=0.85,
+            label_x=0.7,
+            label_size=60,
+            linewidth=2,
+            line_color=plt.get_cmap('ocean'),
+            kind='elevation')
+```
+
+![png](examples/hawaii.png)
 
 ### How do I find a bounding box?
 

@@ -1,1 +1,1 @@
-from .ridge_map import RidgeMap
+from .ridge_map import RidgeMap, FontManager

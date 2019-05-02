@@ -1,6 +1,7 @@
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
 
+from matplotlib.collections import LineCollection
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import numpy as np
@@ -152,6 +153,7 @@ class RidgeMap:
         label_verticalalignment="bottom",
         label_size=60,
         line_color="black",
+        kind="gradient",
         linewidth=2,
         background_color=(0.9255, 0.9098, 0.9255),
         size_scale=20,
@@ -179,6 +181,9 @@ class RidgeMap:
             fontsize of the label
         line_color : string or callable
             colors for the map. A callable will be fed the scaled index in [0, 1]
+        kind : {"gradient" | "elevation"}
+            If you provide a colormap to `line_color`, "gradient" colors by the line index, and
+            "elevation" colors by the actual elevation along the line.
         linewidth : float
             Width of each line in the map
         background_color : color
@@ -192,6 +197,8 @@ class RidgeMap:
         -------
         matplotlib.Axes
         """
+        if kind not in {"gradient", "elevation"}:
+            raise TypeError("Argument `kind` must be one of 'gradient' or 'elevation'")
         if values is None:
             values = self.preprocess()
 
@@ -200,14 +207,26 @@ class RidgeMap:
             _, ax = plt.subplots(figsize=(size_scale, size_scale * ratio))
 
         x = np.arange(values.shape[1])
+        norm = plt.Normalize(np.nanmin(values), np.nanmax(values))
         for idx, row in enumerate(values):
             y_base = -6 * idx * np.ones_like(row)
             y = row + y_base
-            if callable(line_color):
-                color = line_color(idx / values.shape[0])
+            if callable(line_color) and kind == "elevation":
+                points = np.array([x, y]).T.reshape(-1, 1, 2)
+                segments = np.concatenate([points[:-1], points[1:]], axis=1)
+                lc = LineCollection(
+                    segments, cmap=line_color, zorder=idx + 1, norm=norm
+                )
+                lc.set_array(row)
+                lc.set_linewidth(linewidth)
+                ax.add_collection(lc)
             else:
-                color = line_color
-            ax.plot(x, y, "-", color=color, zorder=idx, lw=linewidth)
+                if callable(line_color) and kind == "gradient":
+                    color = line_color(idx / values.shape[0])
+                else:
+                    color = line_color
+
+                ax.plot(x, y, "-", color=color, zorder=idx, lw=linewidth)
             ax.fill_between(x, y_base, y, color=background_color, zorder=idx)
 
         ax.text(
