@@ -99,7 +99,13 @@ class RidgeMap:
         )
 
     def preprocess(
-        self, *, values=None, water_ntile=10, lake_flatness=3, vertical_ratio=40
+        self,
+        *,
+        values=None,
+        water_ntile=10,
+        lake_flatness=3,
+        vertical_ratio=40,
+        viewpoint="south"
     ):
         """Default preprocessing.
 
@@ -122,6 +128,8 @@ class RidgeMap:
         vertical_ratio : float > 0
             How much to exaggerate hills. Kind of arbitrary. 40 is reasonable,
             but try bigger and smaller values!
+        viewpoint : str in ["south", "west", "north", "east"] (default "south")
+            The compass direction from which the map will be visualised.
 
         Returns
         -------
@@ -142,6 +150,11 @@ class RidgeMap:
         values[nan_vals] = np.nan
         values[np.logical_or(is_water, is_lake)] = np.nan
         values = vertical_ratio * values[-1::-1]  # switch north and south
+
+        switch = {"south": 0, "west": 1, "north": 2, "east": 3}
+        rotations = switch[viewpoint]
+        values = np.rot90(m=values, k=rotations)
+
         return values
 
     def plot_map(
