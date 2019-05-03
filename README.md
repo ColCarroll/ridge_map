@@ -192,7 +192,9 @@ rm.plot_map(label_size=24, background_color=(1, 1, 1), ax=axes[1])
 User Examples
 -------------
 
-This example shows how to annotate a lat/long on the map, and updates the color of the label text to allow for a dark background.
+### Annotating, changing background color, custom text
+
+This example shows how to annotate a lat/long on the map, and updates the color of the label text to allow for a dark background. Thanks to [kratsg](https://github.com/kratsg) for contributing.
 
 ```python
 import matplotlib
