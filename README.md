@@ -11,7 +11,13 @@ Uses [matplotlib](https://matplotlib.org/), [SRTM.py](https://github.com/tkrajin
 Installation
 ------------
 
-Install from github with
+Available on [PyPI](https://pypi.org/project/ridge-map/):
+
+```bash
+pip install ridge_map
+```
+
+Or live on the edge and install from github with
 
 ```bash
 pip install git+git://github.com/colcarroll/ridge_map.git
@@ -21,7 +27,6 @@ Want to help?
 -------------
 
 - I feel like I am missing something easy or obvious with lake/road/river/ocean detection, but what I've got gets me most of the way there. If you hack on the `RidgeMap.preprocessor` method and find something nice, I would love to hear about it!
-- ~~As far as I can tell, there is no way to change the color of a line in matplotlib dynamically. I would love to color the lines by elevation.~~ Color by elevation!
 - Did you make a cool map? Open an issue with the code and I will add it to the examples.
 
 Examples
@@ -40,7 +45,7 @@ from ridge_map import RidgeMap
 RidgeMap().plot_map()
 ```
 
-![png](examples/white_mountains.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/white_mountains.png?raw=true)
 
 ### Download once and tweak settings
 
@@ -65,7 +70,7 @@ rm.plot_map(values=values,
             linewidth=1)
 ```
 
-![png](examples/karwendelgebirge.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/karwendelgebirge.png?raw=true)
 
 ### Plot with colors!
 
@@ -82,7 +87,7 @@ rm.plot_map(values=rm.preprocess(values=values, water_ntile=12, vertical_ratio=4
             line_color='orange')
 ```
 
-![png](examples/austin.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/austin.png?raw=true)
 
 ### Plot with even more colors!
 
@@ -97,7 +102,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=3, water_ntile=50,
             line_color = plt.get_cmap('spring'))
 ```
 
-![png](examples/san_francisco.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/san_francisco.png?raw=true)
 
 ### Plot with custom fonts and elevation colors!
 
@@ -122,7 +127,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=2, water_ntile=10,
             kind='elevation')
 ```
 
-![png](examples/hawaii.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/hawaii.png?raw=true)
 
 ### How do I find a bounding box?
 
@@ -138,7 +143,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=2, water_ntile=2, 
             label_size=40)
 ```
 
-![png](examples/kent.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/kent.png?raw=true)
 
 ### What about really flat areas?
 
@@ -154,7 +159,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=4, water_ntile=30,
             linewidth=1)
 ```
 
-![png](examples/boston.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/boston.png?raw=true)
 
 ### What about Walden Pond?
 
@@ -169,7 +174,7 @@ rm.plot_map(values=rm.preprocess(values=values, water_ntile=15, vertical_ratio=3
             label_size=30)
 ```
 
-![png](examples/concord.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/concord.png?raw=true)
 
 ### Do you play nicely with other matplotlib figures?
 
@@ -187,7 +192,7 @@ rm = RidgeMap()
 rm.plot_map(label_size=24, background_color=(1, 1, 1), ax=axes[1])
 ```
 
-![png](examples/multiaxis.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/multiaxis.png?raw=true)
 
 User Examples
 -------------
@@ -243,4 +248,4 @@ ridges.plot(*scipp_coords, 'o',
             zorder=len(values)+10)
 ```
 
-![png](examples/santa_cruz.png)
+![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/santa_cruz.png?raw=true)
