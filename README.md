@@ -188,3 +188,57 @@ rm.plot_map(label_size=24, background_color=(1, 1, 1), ax=axes[1])
 ```
 
 ![png](examples/multiaxis.png)
+
+User Examples
+-------------
+
+This example shows how to annotate a lat/long on the map, and updates the color of the label text to allow for a dark background.
+
+```python
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+bgcolor = np.array([65,74,76])/255.
+
+scipp = (-122.060510, 36.998776)
+rm = RidgeMap((-122.087116,36.945365,-121.999226,37.023250))
+scipp_coords = ((scipp[0] - rm.longs[0])/(rm.longs[1] - rm.longs[0]),(scipp[1] - rm.lats[0])/(rm.lats[1] - rm.lats[0]))
+
+values = rm.get_elevation_data(num_lines=150)
+ridges = rm.plot_map(values=rm.preprocess(values=values,
+                                          lake_flatness=1,
+                                          water_ntile=0,
+                                          vertical_ratio=240),
+            label='Santa Cruz\nMountains',
+            label_x=0.75,
+            label_y=0.05,
+            label_size=36,
+            kind='elevation',
+            linewidth=1,
+            background_color=bgcolor,
+            line_color = plt.get_cmap('cool'))
+
+# Bit of a hack to update the text label color
+for child in ridges.get_children():
+    if isinstance(child, matplotlib.text.Text) and 'Santa Cruz' in child._text:
+        label_artist = child
+        break
+label_artist.set_color('white')
+
+ridges.text(scipp_coords[0]+0.005, scipp_coords[1]+0.005, 'SCIPP',
+            fontproperties=rm.font,
+            size=20,
+            color="white",
+            transform=ridges.transAxes,
+            verticalalignment="bottom",
+            zorder=len(values)+10)
+
+ridges.plot(*scipp_coords, 'o',
+            color='white',
+            transform=ridges.transAxes,
+            ms=6,
+            zorder=len(values)+10)
+```
+
+![png](examples/santa_cruz.png)
