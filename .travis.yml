@@ -5,7 +5,7 @@ python:
   - "3.7"
 install:
   - pip install .
-  - pip install pydocstyle pytest pylint pytest-cov black coveralls
+  - pip install -U pydocstyle pytest pylint pytest-cov black coveralls
 before_script: # configure a headless display to test plot generation
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
