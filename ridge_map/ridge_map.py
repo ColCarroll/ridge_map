@@ -1,3 +1,4 @@
+"""3D maps with 1D lines."""
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
 
@@ -13,7 +14,7 @@ import srtm
 
 
 class FontManager:
-    """Utility to load fun fonts from https://fonts.google.com/ for matplotlib
+    """Utility to load fun fonts from https://fonts.google.com/ for matplotlib.
 
     Find a nice font at https://fonts.google.com/, and then get its corresponding URL
     from https://github.com/google/fonts/
@@ -28,7 +29,7 @@ class FontManager:
 
     def __init__(
         self,
-        github_url="https://github.com/google/fonts/blob/master/ofl/cinzel/Cinzel-Regular.ttf?raw=True",
+        github_url="https://github.com/google/fonts/blob/master/ofl/cinzel/Cinzel-Regular.ttf?raw=True",  # pylint: disable=line-too-long
     ):
         """
         Lazily download a font.
@@ -44,7 +45,7 @@ class FontManager:
 
     @property
     def prop(self):
-        """A matplotlib.font_manager.FontProperties object that sets the custom font."""
+        """Get matplotlib.font_manager.FontProperties object that sets the custom font."""
         if self._prop is None:
             with NamedTemporaryFile(delete=False, suffix=".ttf") as temp_file:
                 temp_file.write(urlopen(self.github_url).read())
@@ -53,8 +54,13 @@ class FontManager:
 
 
 class RidgeMap:
+    """Main class for interacting with art.
+
+    Keeps state around so no servers are hit too often.
+    """
+
     def __init__(self, bbox=(-71.928864, 43.758201, -70.957947, 44.465151), font=None):
-        """Initialize RidgeMap
+        """Initialize RidgeMap.
 
         Parameters
         ----------
@@ -73,10 +79,12 @@ class RidgeMap:
 
     @property
     def lats(self):
+        """Left and right latitude of bounding box."""
         return (self.bbox[1], self.bbox[3])
 
     @property
     def longs(self):
+        """Bottom and top longitude of bounding box."""
         return (self.bbox[0], self.bbox[2])
 
     def get_elevation_data(self, num_lines=80, elevation_pts=300, viewpoint="south"):
@@ -110,7 +118,7 @@ class RidgeMap:
     def preprocess(
         self, *, values=None, water_ntile=10, lake_flatness=3, vertical_ratio=40
     ):
-        """Default preprocessing.
+        """Get map data ready for plotting.
 
         You can do this yourself, and pass an array directly to plot_map. This
         gathers all nan values, the lowest `water_ntile` percentile of elevations,
@@ -137,7 +145,6 @@ class RidgeMap:
         np.ndarray
             Processed data.
         """
-
         if values is None:
             values = self.get_elevation_data()
         nan_vals = np.isnan(values)
@@ -153,6 +160,7 @@ class RidgeMap:
         values = vertical_ratio * values[-1::-1]  # switch north and south
         return values
 
+    # pylint: disable=too-many-arguments,too-many-locals
     def plot_map(
         self,
         values=None,
@@ -223,12 +231,12 @@ class RidgeMap:
             if callable(line_color) and kind == "elevation":
                 points = np.array([x, y]).T.reshape(-1, 1, 2)
                 segments = np.concatenate([points[:-1], points[1:]], axis=1)
-                lc = LineCollection(
+                lines = LineCollection(
                     segments, cmap=line_color, zorder=idx + 1, norm=norm
                 )
-                lc.set_array(row)
-                lc.set_linewidth(linewidth)
-                ax.add_collection(lc)
+                lines.set_array(row)
+                lines.set_linewidth(linewidth)
+                ax.add_collection(lines)
             else:
                 if callable(line_color) and kind == "gradient":
                     color = line_color(idx / values.shape[0])
@@ -247,7 +255,7 @@ class RidgeMap:
             size=label_size,
             verticalalignment=label_verticalalignment,
             bbox=dict(facecolor=background_color, alpha=1, linewidth=0),
-            zorder=idx + 10,
+            zorder=len(values) + 10,
         )
 
         ax.xaxis.set_visible(False)
