@@ -251,3 +251,12 @@ ridges.plot(*scipp_coords, 'o',
 ```
 
 ![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/santa_cruz.png?raw=true)
+
+Elevation Data
+--------------
+
+Elevation data used by `ridge_map` comes from NASA's [Shuttle Radar Topography Mission](https://www2.jpl.nasa.gov/srtm/) (SRTM), high resolution topographic data collected in 2000, and released in 2015. SRTM data are sampled at a resolution of 1 arc-second (about 30 meters). SRTM data is provided to `ridge_map` via the python package `SRTM.py` ([link](https://github.com/tkrajina/srtm.py)). SRTM data is not available for latitudes greater than N 60° or less than S 60°:
+
+
+
+![gif](https://www2.jpl.nasa.gov/srtm/images/SRTM_2-24-2016.gif)
