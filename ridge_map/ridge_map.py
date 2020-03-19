@@ -153,8 +153,7 @@ class RidgeMap:
         values = (values - np.min(values)) / (np.max(values) - np.min(values))
 
         is_water = values < np.percentile(values, water_ntile)
-        is_lake = rank.gradient(img_as_ubyte(
-            values), square(3)) < lake_flatness
+        is_lake = rank.gradient(img_as_ubyte(values), square(3)) < lake_flatness
 
         values[nan_vals] = np.nan
         values[np.logical_or(is_water, is_lake)] = np.nan
@@ -216,14 +215,12 @@ class RidgeMap:
         matplotlib.Axes
         """
         if kind not in {"gradient", "elevation"}:
-            raise TypeError(
-                "Argument `kind` must be one of 'gradient' or 'elevation'")
+            raise TypeError("Argument `kind` must be one of 'gradient' or 'elevation'")
         if values is None:
             values = self.preprocess()
 
         if ax is None:
-            ratio = (self.lats[1] - self.lats[0]) / \
-                (self.longs[1] - self.longs[0])
+            ratio = (self.lats[1] - self.lats[0]) / (self.longs[1] - self.longs[0])
             _, ax = plt.subplots(figsize=(size_scale, size_scale * ratio))
 
         x = np.arange(values.shape[1])
