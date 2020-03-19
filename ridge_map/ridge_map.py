@@ -80,12 +80,12 @@ class RidgeMap:
     @property
     def lats(self):
         """Left and right latitude of bounding box."""
-        return (self.bbox[1], self.bbox[3])
+        return (self.bbox[0], self.bbox[2])
 
     @property
     def longs(self):
         """Bottom and top longitude of bounding box."""
-        return (self.bbox[0], self.bbox[2])
+        return (self.bbox[1], self.bbox[3])
 
     def get_elevation_data(self, num_lines=80, elevation_pts=300, viewpoint="south"):
         """Fetch elevation data and return a numpy array.
@@ -153,7 +153,8 @@ class RidgeMap:
         values = (values - np.min(values)) / (np.max(values) - np.min(values))
 
         is_water = values < np.percentile(values, water_ntile)
-        is_lake = rank.gradient(img_as_ubyte(values), square(3)) < lake_flatness
+        is_lake = rank.gradient(img_as_ubyte(
+            values), square(3)) < lake_flatness
 
         values[nan_vals] = np.nan
         values[np.logical_or(is_water, is_lake)] = np.nan
@@ -215,12 +216,14 @@ class RidgeMap:
         matplotlib.Axes
         """
         if kind not in {"gradient", "elevation"}:
-            raise TypeError("Argument `kind` must be one of 'gradient' or 'elevation'")
+            raise TypeError(
+                "Argument `kind` must be one of 'gradient' or 'elevation'")
         if values is None:
             values = self.preprocess()
 
         if ax is None:
-            ratio = (self.lats[1] - self.lats[0]) / (self.longs[1] - self.longs[0])
+            ratio = (self.lats[1] - self.lats[0]) / \
+                (self.longs[1] - self.longs[0])
             _, ax = plt.subplots(figsize=(size_scale, size_scale * ratio))
 
         x = np.arange(values.shape[1])
