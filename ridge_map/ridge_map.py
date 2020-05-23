@@ -65,7 +65,7 @@ class RidgeMap:
         Parameters
         ----------
         bbox : list-like of length 4
-            In the form (lat, long, lat, long), describing the
+            In the form (long, lat, long, lat), describing the
             (bottom_left, top_right) corners of a box.
             http://bboxfinder.com is a useful way to find these tuples.
         font : matplotlib.font_manager.FontProperties
