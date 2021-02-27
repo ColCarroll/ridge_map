@@ -115,7 +115,7 @@ If you pass a matplotlib colormap, you can specify `kind="elevation"` to color t
 ```python
 from ridge_map import FontManager
 
-font = FontManager('https://github.com/google/fonts/blob/master/ofl/uncialantiqua/UncialAntiqua-Regular.ttf?raw=True')
+font = FontManager('https://github.com/google/fonts/blob/main/ofl/uncialantiqua/UncialAntiqua-Regular.ttf?raw=true')
 rm = RidgeMap((-156.250305,18.890695,-154.714966,20.275080), font=font.prop)
 
 values = rm.get_elevation_data(num_lines=100)
