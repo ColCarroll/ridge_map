@@ -18,5 +18,3 @@ jobs:
         python -m pip install pydocstyle pytest pylint pytest-cov black coveralls
     - name: Run tests
       run: ./scripts/test.sh
-    - name: Coveralls
-      run: coveralls
