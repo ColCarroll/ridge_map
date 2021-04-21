@@ -1,7 +1,6 @@
 ridge_map
 =========
-[![Build Status](https://travis-ci.org/ColCarroll/ridge_map.svg?branch=master)](https://travis-ci.org/ColCarroll/ridge_map)
-[![Coverage Status](https://coveralls.io/repos/github/ColCarroll/ridge_map/badge.svg?branch=master)](https://coveralls.io/github/ColCarroll/ridge_map?branch=master)
+![Build status](https://github.com/joshy/ridge_map/actions/workflows/build.yml/badge.svg)
 
 *Ridge plots of ridges*
 -----------------------
