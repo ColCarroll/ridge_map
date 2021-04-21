@@ -38,7 +38,7 @@ class FontManager:
         ----------
         github_url : str
             Can really be any .ttf file, but probably looks like
-            "https://github.com/google/fonts/blob/main/ofl/cinzel/static/Cinzel-Regular.ttf?raw=true"
+            "https://github.com/google/fonts/blob/main/ofl/cinzel/static/Cinzel-Regular.ttf?raw=true" # pylint: disable=line-too-long
         """
         self.github_url = github_url
         self._prop = None
