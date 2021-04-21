@@ -229,7 +229,7 @@ class RidgeMap:
             y_base = -6 * idx * np.ones_like(row)
             y = row + y_base
             if callable(line_color) and kind == "elevation":
-                points = np.array([x, y]).T.reshape(-1, 1, 2)
+                points = np.array([x, y]).T.reshape((-1, 1, 2))
                 segments = np.concatenate([points[:-1], points[1:]], axis=1)
                 lines = LineCollection(
                     segments, cmap=line_color, zorder=idx + 1, norm=norm
