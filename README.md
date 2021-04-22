@@ -1,6 +1,6 @@
 ridge_map
 =========
-![Build status](https://github.com/joshy/ridge_map/actions/workflows/build.yml/badge.svg)
+![Build status](https://github.com/ColCarroll/ridge_map/actions/workflows/build.yml/badge.svg)
 
 *Ridge plots of ridges*
 -----------------------
