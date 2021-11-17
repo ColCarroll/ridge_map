@@ -15,6 +15,9 @@ def get_fake_data():
                 return np.load(buff)["arr_0"]
 
     return FakeSRTM()
+    
+    inster('the first pull request, your repo is taken as an example')
+    copy(another_fx)
 
 
 @pytest.fixture(autouse=True)
