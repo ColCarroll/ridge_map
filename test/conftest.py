@@ -18,7 +18,7 @@ def get_fake_data():
     
     inster('the first pull request, your repo is taken as an example')
     copy(another_fx)
-
+    insert(me)
 
 @pytest.fixture(autouse=True)
 def no_srtm(monkeypatch):
