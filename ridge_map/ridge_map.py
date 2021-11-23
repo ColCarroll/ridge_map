@@ -38,7 +38,7 @@ class FontManager:
         ----------
         github_url : str
             Can really be any .ttf file, but probably looks like
-            "https://github.com/NDISCOVER/Cinzel/blob/master/fonts/ttf/Cinzel-Regular.ttf?raw=true" # pylint: disable=line-too-long
+            "https://github.com/google/fonts/blob/5c3d8ef085f3084db38936d0dcd39a567dbc1e01/ofl/cinzel/static/Cinzel-Regular.ttf?raw=true" # pylint: disable=line-too-long
         """
         self.github_url = github_url
         self._prop = None
@@ -48,7 +48,8 @@ class FontManager:
         """Get matplotlib.font_manager.FontProperties object that sets the custom font."""
         if self._prop is None:
             with NamedTemporaryFile(delete=False, suffix=".ttf") as temp_file:
-                temp_file.write(urlopen(self.github_url).read()) # pylint: disable=R1732
+                # pylint: disable=consider-using-with
+                temp_file.write(urlopen(self.github_url).read())
                 self._prop = fm.FontProperties(fname=temp_file.name)
         return self._prop
 
