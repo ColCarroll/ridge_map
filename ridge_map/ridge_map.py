@@ -48,7 +48,7 @@ class FontManager:
         """Get matplotlib.font_manager.FontProperties object that sets the custom font."""
         if self._prop is None:
             with NamedTemporaryFile(delete=False, suffix=".ttf") as temp_file:
-                temp_file.write(urlopen(self.github_url).read())
+                temp_file.write(urlopen(self.github_url).read()) # pylint: disable=R1732
                 self._prop = fm.FontProperties(fname=temp_file.name)
         return self._prop
 
