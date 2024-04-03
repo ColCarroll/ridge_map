@@ -41,3 +41,4 @@ jobs:
         pypi-token: ${{ secrets.PYPI_API_TOKEN }}
         gh-token: ${{ secrets.GITHUB_TOKEN }}
         parse-changelog: false
+        pkg-name: ridge-map
