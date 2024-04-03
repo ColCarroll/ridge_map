@@ -1,4 +1,5 @@
 """3D maps with 1D lines."""
+
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
 
@@ -255,7 +256,7 @@ class RidgeMap:
             fontproperties=self.font,
             size=label_size,
             verticalalignment=label_verticalalignment,
-            bbox=dict(facecolor=background_color, alpha=1, linewidth=0),
+            bbox={"facecolor": background_color, "alpha": 1, "linewidth": 0},
             zorder=len(values) + 10,
         )
 
