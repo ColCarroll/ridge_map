@@ -24,6 +24,8 @@ Or live on the edge and install from github with
 pip install git+https://github.com/colcarroll/ridge_map.git
 ```
 
+You can also make a copy of [this colab](https://colab.research.google.com/drive/1ntwd73haePt3OS5ysz4yGSlhmUecY24O?usp=sharing).
+
 Want to help?
 -------------
 
@@ -46,7 +48,7 @@ from ridge_map import RidgeMap
 RidgeMap().plot_map()
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/white_mountains.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/white_mountains.png?raw=true)
 
 ### Download once and tweak settings
 
@@ -71,7 +73,7 @@ rm.plot_map(values=values,
             linewidth=1)
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/karwendelgebirge.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/karwendelgebirge.png?raw=true)
 
 ### Plot with colors!
 
@@ -88,7 +90,7 @@ rm.plot_map(values=rm.preprocess(values=values, water_ntile=12, vertical_ratio=4
             line_color='orange')
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/austin.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/austin.png?raw=true)
 
 ### Plot with even more colors!
 
@@ -103,7 +105,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=3, water_ntile=50,
             line_color = plt.get_cmap('spring'))
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/san_francisco.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/san_francisco.png?raw=true)
 
 ### Plot with custom fonts and elevation colors!
 
@@ -128,7 +130,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=2, water_ntile=10,
             kind='elevation')
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/hawaii.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/hawaii.png?raw=true)
 
 ### How do I find a bounding box?
 
@@ -144,7 +146,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=2, water_ntile=2, 
             label_size=40)
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/kent.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/kent.png?raw=true)
 
 ### What about really flat areas?
 
@@ -160,7 +162,7 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=4, water_ntile=30,
             linewidth=1)
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/boston.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/boston.png?raw=true)
 
 ### What about Walden Pond?
 
@@ -175,7 +177,7 @@ rm.plot_map(values=rm.preprocess(values=values, water_ntile=15, vertical_ratio=3
             label_size=30)
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/concord.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/concord.png?raw=true)
 
 ### Do you play nicely with other matplotlib figures?
 
@@ -193,7 +195,7 @@ rm = RidgeMap()
 rm.plot_map(label_size=24, background_color=(1, 1, 1), ax=axes[1])
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/multiaxis.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/multiaxis.png?raw=true)
 
 User Examples
 -------------
@@ -249,7 +251,7 @@ ridges.plot(*scipp_coords, 'o',
             zorder=len(values)+10)
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/master/examples/santa_cruz.png?raw=true)
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/santa_cruz.png?raw=true)
 
 Elevation Data
 --------------
