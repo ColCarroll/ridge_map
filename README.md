@@ -21,7 +21,7 @@ pip install ridge_map
 Or live on the edge and install from github with
 
 ```bash
-!pip install git+https://github.com/colcarroll/ridge_map.git
+pip install git+https://github.com/atseewal/ridge_map.git
 ```
 
 Want to help?
