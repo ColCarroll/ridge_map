@@ -167,6 +167,7 @@ class RidgeMap:
         self,
         values=None,
         label="The White\nMountains",
+        label_color=None,
         label_x=0.62,
         label_y=0.15,
         label_verticalalignment="bottom",
@@ -189,6 +190,8 @@ class RidgeMap:
             bounding box.
         label : string
             Label to place on the map. Use an empty string for no label.
+        label_color : string or None
+            Color for the label. If None, then uses line_color
         label_x : float in [0, 1]
             Where to position the label horizontally
         label_y : float in [0, 1]
@@ -247,11 +250,18 @@ class RidgeMap:
 
                 ax.plot(x, y, "-", color=color, zorder=idx, lw=linewidth)
             ax.fill_between(x, y_base, y, color=background_color, zorder=idx)
+            
+        if label_color is None:
+            if callable(line_color):
+                label_color = line_color(0.0)
+            else:
+                label_color = line_color
 
         ax.text(
             label_x,
             label_y,
             label,
+            color=label_color,
             transform=ax.transAxes,
             fontproperties=self.font,
             size=label_size,
