@@ -78,7 +78,7 @@ class RidgeMap:
         if font is None:
             font = FontManager().prop
         self.font = font
-        self.annotations = list()
+        self.annotations = []
 
     @property
     def lats(self):
@@ -162,17 +162,18 @@ class RidgeMap:
         values[np.logical_or(is_water, is_lake)] = np.nan
         values = vertical_ratio * values[-1::-1]  # switch north and south
         return values
-        
+
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def add_annotation(
-        self, 
-        label="Mount Washington", 
-        coordinates=(-71.3173, 44.2946), 
-        x_offset=-0.25, 
-        y_offset=-0.045, 
+        self,
+        label="Mount Washington",
+        coordinates=(-71.3173, 44.2946),
+        x_offset=-0.25,
+        y_offset=-0.045,
         label_size=30,
         annotation_size=8,
-        color=None, 
-        background=True
+        color=None,
+        background=True,
     ):
         """Save an annotation.
 
@@ -197,16 +198,18 @@ class RidgeMap:
         background : bool
             If there is a background or not
         """
-        self.annotations.append((
-            label,
-            coordinates,
-            x_offset, 
-            y_offset, 
-            label_size, 
-            annotation_size, 
-            color, 
-            background
-        ))
+        self.annotations.append(
+            (
+                label,
+                coordinates,
+                x_offset,
+                y_offset,
+                label_size,
+                annotation_size,
+                color,
+                background,
+            )
+        )
 
     # pylint: disable=too-many-arguments,too-many-locals
     def plot_map(
@@ -265,17 +268,22 @@ class RidgeMap:
         -------
         matplotlib.Axes
         """
+
         def plot_annotations():
             """Plot the annotations.
 
-            Takes all the annotations from self.annotations and adds them to the map    
+            Takes all the annotations from self.annotations and adds them to the map
             """
             for annotation in self.annotations:
-                rel_coordinates = ((annotation[1][0] - self.longs[0])/(self.longs[1] - self.longs[0]),(annotation[1][1] - self.lats[0])/(self.lats[1] - self.lats[0]))
+                rel_coordinates = (
+                    (annotation[1][0] - self.longs[0])
+                    / (self.longs[1] - self.longs[0]),
+                    (annotation[1][1] - self.lats[0]) / (self.lats[1] - self.lats[0]),
+                )
                 annotation_color = ax.texts[0].get_color()
                 if annotation[6] is not None:
                     annotation_color = annotation[6]
-                
+
                 ax.text(
                     rel_coordinates[0] + annotation[2],
                     rel_coordinates[1] + annotation[3],
@@ -284,20 +292,24 @@ class RidgeMap:
                     size=annotation[4],
                     color=annotation_color,
                     transform=ax.transAxes,
-                    bbox={"facecolor": background_color, "alpha": 1, "linewidth": 1} if annotation[7] else None,
+                    bbox=(
+                        {"facecolor": background_color, "alpha": 1, "linewidth": 1}
+                        if annotation[7]
+                        else None
+                    ),
                     verticalalignment="bottom",
-                    zorder=len(values) + 10
+                    zorder=len(values) + 10,
                 )
-                
+
                 ax.plot(
-                    *rel_coordinates, 
-                    'o', 
+                    *rel_coordinates,
+                    "o",
                     color=annotation_color,
                     transform=ax.transAxes,
                     ms=annotation[5],
                     zorder=len(values) + 10
                 )
-        
+
         if kind not in {"gradient", "elevation"}:
             raise TypeError("Argument `kind` must be one of 'gradient' or 'elevation'")
         if values is None:
@@ -329,7 +341,7 @@ class RidgeMap:
 
                 ax.plot(x, y, "-", color=color, zorder=idx, lw=linewidth)
             ax.fill_between(x, y_base, y, color=background_color, zorder=idx)
-            
+
         if label_color is None:
             if callable(line_color):
                 label_color = line_color(0.0)
@@ -354,7 +366,7 @@ class RidgeMap:
         for spine in ax.spines.values():
             spine.set_visible(False)
         ax.set_facecolor(background_color)
-        
+
         plot_annotations()
-        
+
         return ax
