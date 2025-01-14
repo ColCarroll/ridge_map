@@ -78,7 +78,7 @@ class RidgeMap:
         if font is None:
             font = FontManager().prop
         self.font = font
-        self.annotations = []
+        self.ax = None
 
     @property
     def lats(self):
@@ -164,8 +164,9 @@ class RidgeMap:
         return values
 
     # pylint: disable=too-many-arguments,too-many-positional-arguments
-    def add_annotation(
+    def plot_annotation(
         self,
+        values=None,
         label="Mount Washington",
         coordinates=(-71.3173, 44.2946),
         x_offset=-0.25,
@@ -174,13 +175,17 @@ class RidgeMap:
         annotation_size=8,
         color=None,
         background=True,
+        ax=None,
     ):
-        """Save an annotation.
+        """Plot an annotation to an existing map
 
-        Must call before plot_map()
+        It is recommended to call this function only after calling map_plot()
 
         Parameters
         ----------
+        values : np.ndarray
+            Array of elevations to plot. Defaults to the elevations at the provided
+            bounding box.
         label : string
             Label to place on the map. Use an empty string for no label.
         coordinates : (float, float)
@@ -197,20 +202,62 @@ class RidgeMap:
             Color for the label. If None, then uses label_color of map
         background : bool
             If there is a background or not
+        ax : matplotlib Axes
+            You can pass your own axes, but probably best not to
+            
+        Returns
+        -------
+        matplotlib.Axes
         """
-        self.annotations.append(
-            (
-                label,
-                coordinates,
-                x_offset,
-                y_offset,
-                label_size,
-                annotation_size,
-                color,
-                background,
-            )
+        
+        if values is None:
+            values = self.preprocess()
+        
+        if ax is None and self.ax is None:
+            raise ValueError("No axes found: Either plot_map() beforehand or pass an matplotlib.Axes value through")
+        elif ax is None:
+            ax = self.ax
+            
+        rel_coordinates = (
+            (coordinates[0] - self.longs[0]) / (self.longs[1] - self.longs[0]),
+            (coordinates[1] - self.lats[0]) / (self.lats[1] - self.lats[0]),
+        )
+        
+        annotation_color = "black"
+        if color:
+            annotation_color = color
+        elif ax.texts[0].get_color():
+            annotation_color = ax.texts[0].get_color()
+
+        ax.text(
+            rel_coordinates[0] + x_offset,
+            rel_coordinates[1] + y_offset,
+            label,
+            fontproperties=self.font,
+            size=label_size,
+            color=annotation_color,
+            transform=ax.transAxes,
+            bbox=(
+                {"facecolor": ax.get_facecolor(), "alpha": 1, "linewidth": 1}
+                if background
+                else None
+            ),
+            verticalalignment="bottom",
+            zorder=len(values) + 10,
         )
 
+        ax.plot(
+            *rel_coordinates,
+            "o",
+            color=annotation_color,
+            transform=ax.transAxes,
+            ms=annotation_size,
+            zorder=len(values) + 10
+        )
+        
+        self.ax = ax
+        return ax
+        
     # pylint: disable=too-many-arguments,too-many-locals
     def plot_map(
         self,
@@ -269,47 +316,6 @@ class RidgeMap:
         matplotlib.Axes
         """
 
-        def plot_annotations():
-            """Plot the annotations.
-
-            Takes all the annotations from self.annotations and adds them to the map
-            """
-            for annotation in self.annotations:
-                rel_coordinates = (
-                    (annotation[1][0] - self.longs[0])
-                    / (self.longs[1] - self.longs[0]),
-                    (annotation[1][1] - self.lats[0]) / (self.lats[1] - self.lats[0]),
-                )
-                annotation_color = ax.texts[0].get_color()
-                if annotation[6] is not None:
-                    annotation_color = annotation[6]
-
-                ax.text(
-                    rel_coordinates[0] + annotation[2],
-                    rel_coordinates[1] + annotation[3],
-                    annotation[0],
-                    fontproperties=self.font,
-                    size=annotation[4],
-                    color=annotation_color,
-                    transform=ax.transAxes,
-                    bbox=(
-                        {"facecolor": background_color, "alpha": 1, "linewidth": 1}
-                        if annotation[7]
-                        else None
-                    ),
-                    verticalalignment="bottom",
-                    zorder=len(values) + 10,
-                )
-
-                ax.plot(
-                    *rel_coordinates,
-                    "o",
-                    color=annotation_color,
-                    transform=ax.transAxes,
-                    ms=annotation[5],
-                    zorder=len(values) + 10
-                )
-
         if kind not in {"gradient", "elevation"}:
             raise TypeError("Argument `kind` must be one of 'gradient' or 'elevation'")
         if values is None:
@@ -366,7 +372,6 @@ class RidgeMap:
         for spine in ax.spines.values():
             spine.set_visible(False)
         ax.set_facecolor(background_color)
-
-        plot_annotations()
-
+        
+        self.ax = ax
         return ax
