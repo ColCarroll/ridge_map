@@ -166,7 +166,6 @@ class RidgeMap:
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     def plot_annotation(
         self,
-        values=None,
         label="Mount Washington",
         coordinates=(-71.3173, 44.2946),
         x_offset=-0.25,
@@ -183,9 +182,6 @@ class RidgeMap:
 
         Parameters
         ----------
-        values : np.ndarray
-            Array of elevations to plot. Defaults to the elevations at the provided
-            bounding box.
         label : string
             Label to place on the map. Use an empty string for no label.
         coordinates : (float, float)
@@ -208,15 +204,13 @@ class RidgeMap:
         Returns
         -------
         matplotlib.Axes
-        """
-        
-        if values is None:
-            values = self.preprocess()
-        
+        """        
         if ax is None and self.ax is None:
             raise ValueError("No axes found: Either plot_map() beforehand or pass an matplotlib.Axes value through")
         elif ax is None:
             ax = self.ax
+            
+        highest_zorder = max(text.zorder for text in ax.texts) if ax.texts else 1
             
         rel_coordinates = (
             (coordinates[0] - self.longs[0]) / (self.longs[1] - self.longs[0]),
@@ -243,7 +237,7 @@ class RidgeMap:
                 else None
             ),
             verticalalignment="bottom",
-            zorder=len(values) + 10,
+            zorder=highest_zorder,
         )
 
         ax.plot(
@@ -252,7 +246,7 @@ class RidgeMap:
             color=annotation_color,
             transform=ax.transAxes,
             ms=annotation_size,
-            zorder=len(values) + 10
+            zorder=highest_zorder,
         )
         
         self.ax = ax
