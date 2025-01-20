@@ -91,7 +91,15 @@ class RidgeMap:
         """Bottom and top longitude of bounding box."""
         return (self.bbox[0], self.bbox[2])
 
-    def get_elevation_data(self, num_lines=80, elevation_pts=300, viewpoint_angle=0, interpolation=0):
+    def get_elevation_data(
+        self, 
+        num_lines=80, 
+        elevation_pts=300, 
+        viewpoint_angle=0, 
+        crop=False,
+        interpolation=0, 
+        lock_resolution=False
+    ):
         """Fetch elevation data and return a numpy array.
 
         Parameters
@@ -103,18 +111,27 @@ class RidgeMap:
             this that srtm enforces, but feel free to go for it!
         viewpoint_angle : int (default 0)
             The angle in degrees from which the map will be visualised.
+        crop : bool
+            If the corners are cropped when rotating
         interpolation : int in [0, 5]
             The level of interpolation. Can smooth out sharp edges, especially 
             when rotating. Above 1 tends to lead to an all NaN graph.
+        lock_resolution : bool
+            Locks the resolution during rotation, ensuring consistent rotation 
+            deltas but producing potential scaling artifacts. These artifacts 
+            can be reduced by setting num_lines = elevation_pts.
 
         Returns
         -------
         np.ndarray
         """
+        if (45 < (viewpoint_angle % 360) < 135 or 225 < (viewpoint_angle % 360) < 315) and not lock_resolution:
+            num_lines, elevation_pts = elevation_pts, num_lines
+            
         values = self._srtm_data.get_image(
             (elevation_pts, num_lines), self.lats, self.longs, 5280, mode="array"
         )
-        values = rotate(values, angle=viewpoint_angle, reshape=True, order=interpolation)
+        values = rotate(values, angle=viewpoint_angle, reshape=not crop, order=interpolation)
         
         return values
 
