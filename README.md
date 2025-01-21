@@ -172,7 +172,7 @@ Play around with `interpolation`, `lock_rotation`, and `crop` to polish out the 
 
 ```python
 rm = RidgeMap((-124.848974,46.292035,-116.463262,49.345786))
-values = rm.get_elevation_data(elevation_pts=300, num_lines=300, viewpoint_angle=11, interpolation=0)
+values = rm.get_elevation_data(elevation_pts=300, num_lines=300, viewpoint_angle=11)
 values=rm.preprocess(
     values=values,
     lake_flatness=2,
@@ -180,7 +180,7 @@ values=rm.preprocess(
     vertical_ratio=240
 )
 rm.plot_map(values=values,
-    label=f'Washington-{angle}',
+    label='Washington',
     label_y=0.8,
     label_x=0.05,
     label_size=40,
