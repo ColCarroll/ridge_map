@@ -10,6 +10,7 @@ import numpy as np
 from skimage.filters import rank
 from skimage.morphology import square
 from skimage.util import img_as_ubyte
+from scipy.ndimage import rotate
 
 import srtm
 
@@ -90,7 +91,15 @@ class RidgeMap:
         """Bottom and top longitude of bounding box."""
         return (self.bbox[0], self.bbox[2])
 
-    def get_elevation_data(self, num_lines=80, elevation_pts=300, viewpoint="south"):
+    def get_elevation_data(
+        self, 
+        num_lines=80, 
+        elevation_pts=300, 
+        viewpoint_angle=0, 
+        crop=False,
+        interpolation=0, 
+        lock_resolution=False
+    ):
         """Fetch elevation data and return a numpy array.
 
         Parameters
@@ -100,22 +109,30 @@ class RidgeMap:
         elevation_pts : int
             Number of points on each line to request. There's some limit to
             this that srtm enforces, but feel free to go for it!
-        viewpoint : str in ["south", "west", "north", "east"] (default "south")
-            The compass direction from which the map will be visualised.
+        viewpoint_angle : int (default 0)
+            The angle in degrees from which the map will be visualised.
+        crop : bool
+            If the corners are cropped when rotating
+        interpolation : int in [0, 5]
+            The level of interpolation. Can smooth out sharp edges, especially 
+            when rotating. Above 1 tends to lead to an all NaN graph.
+        lock_resolution : bool
+            Locks the resolution during rotation, ensuring consistent rotation 
+            deltas but producing potential scaling artifacts. These artifacts 
+            can be reduced by setting num_lines = elevation_pts.
 
         Returns
         -------
         np.ndarray
         """
-        if viewpoint in ["east", "west"]:
+        if (45 < (viewpoint_angle % 360) < 135 or 225 < (viewpoint_angle % 360) < 315) and not lock_resolution:
             num_lines, elevation_pts = elevation_pts, num_lines
+            
         values = self._srtm_data.get_image(
             (elevation_pts, num_lines), self.lats, self.longs, 5280, mode="array"
         )
-
-        switch = {"south": 0, "west": 3, "north": 2, "east": 1}
-        rotations = switch[viewpoint]
-        values = np.rot90(m=values, k=rotations)
+        values = rotate(values, angle=viewpoint_angle, reshape=not crop, order=interpolation)
+        
         return values
 
     def preprocess(
