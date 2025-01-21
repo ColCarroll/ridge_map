@@ -188,8 +188,8 @@ rm.plot_map(values=values,
 )
 ```
 
-![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/washington.png?raw=true)
-![gif, made using imageio](https://github.com/ColCarroll/ridge_map/blob/main/examples/washington.gif?raw=true)
+![png](/examples/washington.png?raw=true)
+![gif](/examples/washington.gif?raw=true)
 
 ### What about Walden Pond?
 
