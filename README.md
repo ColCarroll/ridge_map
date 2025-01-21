@@ -278,6 +278,50 @@ ridges.plot(*scipp_coords, 'o',
             zorder=len(values)+10)
 ```
 
+#### Updated Annotation and Custom Text Color
+The above code still works, but now there is a simplified method (Shown Below) that will produce the same image.
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+from ridge_map import RidgeMap
+
+bgcolor = np.array([65,74,76])/255.
+
+rm = RidgeMap((-122.087116,36.945365,-121.999226,37.023250))
+values = rm.get_elevation_data(num_lines=150)
+values = rm.preprocess(
+    values=values, 
+    lake_flatness=1, 
+    water_ntile=0, 
+    vertical_ratio=240
+)
+            
+rm.plot_map(
+    values=values,
+    label='Santa Cruz\nMountains',
+    label_x=0.75,
+    label_y=0.05,
+    label_size=36,
+    label_color='white',
+    kind='elevation',
+    linewidth=1,
+    background_color=bgcolor,
+    line_color = plt.get_cmap('cool')
+)
+
+rm.plot_annotation(
+    label='SCIPP', 
+    coordinates=(-122.060510, 36.998776), 
+    x_offset=0.005, 
+    y_offset=0.005, 
+    label_size=20, 
+    annotation_size=6, 
+    color='white',
+    background=False
+)
+```
 ![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/santa_cruz.png?raw=true)
 
 Elevation Data
