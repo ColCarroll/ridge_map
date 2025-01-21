@@ -164,6 +164,33 @@ rm.plot_map(values=rm.preprocess(values=values, lake_flatness=4, water_ntile=30,
 
 ![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/boston.png?raw=true)
 
+### Can I change the angle?
+
+Yes, you can change the angle at which you look at the map. South to North is 0 degrees, East to West is 90 degrees and so forth with the rest of the compass. I really recommend playing around with this setting because of the really cool maps it can generate.
+
+Play around with `interpolation`, `lock_rotation`, and `crop` to polish out the map.
+
+```python
+rm = RidgeMap((-124.848974,46.292035,-116.463262,49.345786))
+values = rm.get_elevation_data(elevation_pts=300, num_lines=300, viewpoint_angle=11, interpolation=0)
+values=rm.preprocess(
+    values=values,
+    lake_flatness=2,
+    water_ntile=10,
+    vertical_ratio=240
+)
+rm.plot_map(values=values,
+    label=f'Washington-{angle}',
+    label_y=0.8,
+    label_x=0.05,
+    label_size=40,
+    linewidth=2
+)
+```
+
+![png](https://github.com/ColCarroll/ridge_map/blob/main/examples/washington.png?raw=true)
+![gif, made using imageio](https://github.com/ColCarroll/ridge_map/blob/main/examples/washington.gif?raw=true)
+
 ### What about Walden Pond?
 
 It is that pleasant kettle pond in the bottom right of this map, looking entirely comfortable with its place in Western writing and thought.
