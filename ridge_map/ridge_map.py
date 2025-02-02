@@ -84,12 +84,12 @@ class RidgeMap:
     @property
     def lats(self):
         """Left and right latitude of bounding box."""
-        return (self.bbox[1], self.bbox[3])
+        return (self.bbox[0], self.bbox[2])
 
     @property
     def longs(self):
         """Bottom and top longitude of bounding box."""
-        return (self.bbox[0], self.bbox[2])
+        return (self.bbox[1], self.bbox[3])
 
     def get_elevation_data(
         self, 
