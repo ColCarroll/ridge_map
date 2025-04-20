@@ -8,7 +8,7 @@ import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.filters import rank
-from skimage.morphology import square
+from skimage.morphology import footprint_rectangle
 from skimage.util import img_as_ubyte
 from scipy.ndimage import rotate
 
@@ -173,7 +173,7 @@ class RidgeMap:
         values = (values - np.min(values)) / (np.max(values) - np.min(values))
 
         is_water = values < np.percentile(values, water_ntile)
-        is_lake = rank.gradient(img_as_ubyte(values), square(3)) < lake_flatness
+        is_lake = rank.gradient(img_as_ubyte(values), footprint_rectangle(3, 3)) < lake_flatness
 
         values[nan_vals] = np.nan
         values[np.logical_or(is_water, is_lake)] = np.nan
