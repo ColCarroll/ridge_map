@@ -91,14 +91,15 @@ class RidgeMap:
         """Bottom and top longitude of bounding box."""
         return (self.bbox[0], self.bbox[2])
 
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def get_elevation_data(
-        self, 
-        num_lines=80, 
-        elevation_pts=300, 
-        viewpoint_angle=0, 
+        self,
+        num_lines=80,
+        elevation_pts=300,
+        viewpoint_angle=0,
         crop=False,
-        interpolation=0, 
-        lock_resolution=False
+        interpolation=0,
+        lock_resolution=False,
     ):
         """Fetch elevation data and return a numpy array.
 
@@ -114,25 +115,29 @@ class RidgeMap:
         crop : bool
             If the corners are cropped when rotating
         interpolation : int in [0, 5]
-            The level of interpolation. Can smooth out sharp edges, especially 
+            The level of interpolation. Can smooth out sharp edges, especially
             when rotating. Above 1 tends to lead to an all NaN graph.
         lock_resolution : bool
-            Locks the resolution during rotation, ensuring consistent rotation 
-            deltas but producing potential scaling artifacts. These artifacts 
+            Locks the resolution during rotation, ensuring consistent rotation
+            deltas but producing potential scaling artifacts. These artifacts
             can be reduced by setting num_lines = elevation_pts.
 
         Returns
         -------
         np.ndarray
         """
-        if (45 < (viewpoint_angle % 360) < 135 or 225 < (viewpoint_angle % 360) < 315) and not lock_resolution:
+        if (
+            45 < (viewpoint_angle % 360) < 135 or 225 < (viewpoint_angle % 360) < 315
+        ) and not lock_resolution:
             num_lines, elevation_pts = elevation_pts, num_lines
-            
+
         values = self._srtm_data.get_image(
             (elevation_pts, num_lines), self.lats, self.longs, 5280, mode="array"
         )
-        values = rotate(values, angle=viewpoint_angle, reshape=not crop, order=interpolation)
-        
+        values = rotate(
+            values, angle=viewpoint_angle, reshape=not crop, order=interpolation
+        )
+
         return values
 
     def preprocess(
@@ -173,7 +178,10 @@ class RidgeMap:
         values = (values - np.min(values)) / (np.max(values) - np.min(values))
 
         is_water = values < np.percentile(values, water_ntile)
-        is_lake = rank.gradient(img_as_ubyte(values), square(3)) < lake_flatness
+        is_lake = (
+            rank.gradient(img_as_ubyte(values), footprint_rectangle((3, 3)))
+            < lake_flatness
+        )
 
         values[nan_vals] = np.nan
         values[np.logical_or(is_water, is_lake)] = np.nan
@@ -193,7 +201,7 @@ class RidgeMap:
         background=True,
         ax=None,
     ):
-        """Plot an annotation to an existing map
+        """Plot an annotation to an existing map.
 
         It is recommended to call this function only after calling map_plot()
 
@@ -217,23 +225,26 @@ class RidgeMap:
             If there is a background or not
         ax : matplotlib Axes
             You can pass your own axes, but probably best not to
-            
+
         Returns
         -------
         matplotlib.Axes
-        """        
+        """
         if ax is None and self.ax is None:
-            raise ValueError("No axes found: Either plot_map() beforehand or pass an matplotlib.Axes value through")
-        elif ax is None:
+            raise ValueError(
+                "No axes found: Either plot_map() beforehand or pass an matplotlib.Axes value "
+                "to the function."
+            )
+        if ax is None:
             ax = self.ax
-            
+
         highest_zorder = max(text.zorder for text in ax.texts) if ax.texts else 1
-            
+
         rel_coordinates = (
             (coordinates[0] - self.longs[0]) / (self.longs[1] - self.longs[0]),
             (coordinates[1] - self.lats[0]) / (self.lats[1] - self.lats[0]),
         )
-        
+
         annotation_color = "black"
         if color:
             annotation_color = color
@@ -265,10 +276,10 @@ class RidgeMap:
             ms=annotation_size,
             zorder=highest_zorder,
         )
-        
+
         self.ax = ax
         return ax
-        
+
     # pylint: disable=too-many-arguments,too-many-locals
     def plot_map(
         self,
@@ -383,6 +394,6 @@ class RidgeMap:
         for spine in ax.spines.values():
             spine.set_visible(False)
         ax.set_facecolor(background_color)
-        
+
         self.ax = ax
         return ax
