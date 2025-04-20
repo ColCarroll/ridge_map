@@ -8,7 +8,7 @@ import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.filters import rank
-from skimage.morphology import square
+from skimage.morphology import footprint_rectangle
 from skimage.util import img_as_ubyte
 from scipy.ndimage import rotate
 
@@ -337,7 +337,6 @@ class RidgeMap:
         -------
         matplotlib.Axes
         """
-
         if kind not in {"gradient", "elevation"}:
             raise TypeError("Argument `kind` must be one of 'gradient' or 'elevation'")
         if values is None:
