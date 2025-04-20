@@ -91,6 +91,7 @@ class RidgeMap:
         """Bottom and top longitude of bounding box."""
         return (self.bbox[0], self.bbox[2])
 
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def get_elevation_data(
         self,
         num_lines=80,
@@ -178,7 +179,7 @@ class RidgeMap:
 
         is_water = values < np.percentile(values, water_ntile)
         is_lake = (
-            rank.gradient(img_as_ubyte(values), footprint_rectangle(3, 3))
+            rank.gradient(img_as_ubyte(values), footprint_rectangle((3, 3)))
             < lake_flatness
         )
 
@@ -200,7 +201,7 @@ class RidgeMap:
         background=True,
         ax=None,
     ):
-        """Plot an annotation to an existing map
+        """Plot an annotation to an existing map.
 
         It is recommended to call this function only after calling map_plot()
 
@@ -231,9 +232,10 @@ class RidgeMap:
         """
         if ax is None and self.ax is None:
             raise ValueError(
-                "No axes found: Either plot_map() beforehand or pass an matplotlib.Axes value through"
+                "No axes found: Either plot_map() beforehand or pass an matplotlib.Axes value "
+                "to the function."
             )
-        elif ax is None:
+        if ax is None:
             ax = self.ax
 
         highest_zorder = max(text.zorder for text in ax.texts) if ax.texts else 1
